@@ -19,6 +19,8 @@ public class EnemyManager {
 	private SpriteBatch batch;
 	private Sound deathSound;
 	
+	private boolean disposed = false;
+	
 	public EnemyManager(Player player, SpriteBatch batch) {
 		this.player = player;
 		this.setBatch(batch);
@@ -33,16 +35,33 @@ public class EnemyManager {
 	}
 	
 	public void update(float delta) {
+		if (disposed) return;
+		
 		for (Enemy enemy : enemies) {
 	        if (enemy.justDied) {
 	            enemy.deathSoundTimer -= delta;
-
 	            if (enemy.deathSoundTimer <= 0) {
 	                deathSound.play(1.0f);
-	                enemy.justDied = false; 
+	                enemy.justDied = false;
 	            }
+	            continue; 
 	        }
-	    } 
+
+	        if (!enemy.alive) continue;
+
+	        float dx = player.x - enemy.x;
+	        float dy = player.y - enemy.y;
+
+	        float distance = (float) Math.sqrt(dx * dx + dy * dy);
+
+	        if (distance > 0.5f) { 
+	            float dirX = dx / distance;
+	            float dirY = dy / distance;
+
+	            enemy.x += dirX * enemy.speed * delta;
+	            enemy.y += dirY * enemy.speed * delta;
+	        }
+	    }
 	}
 	
 	public void render(SpriteBatch batch, int screenWidth, int screenHeight) {
@@ -58,8 +77,14 @@ public class EnemyManager {
 	        if (angleToEnemy > -30 && angleToEnemy < 30) {
 
 	            float scale = 300 / distance;
+	            
+	            // scaling 
+	            scale = Math.max(scale, 20);
+	            
 	            float screenX = screenWidth / 2 + (angleToEnemy / 30f) * (screenWidth / 2) - scale / 2;
 	            float screenY = (screenHeight / 2) - scale / 2;
+	            
+	            // screenY = Math.max(screenY, screenHeight / 4);
 
 	            if (enemy.alive) {
 	                batch.draw(enemyTexture, screenX, screenY, scale, scale);
@@ -94,6 +119,8 @@ public class EnemyManager {
     }
 
     public void dispose() {
+    	disposed = true;
+    	
         enemyTexture.dispose();
         deadEnemyTexture.dispose();
         deathSound.dispose();

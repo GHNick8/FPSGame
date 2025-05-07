@@ -13,6 +13,8 @@ public class Renderer {
     private Pixmap wallPixmap;
     private Map map;
     private Player player;
+    
+    private boolean disposed = false;
 
     public Renderer(Map map, Player player, SpriteBatch batch) {
         this.map = map;
@@ -24,6 +26,8 @@ public class Renderer {
     }
 
     public void render(SpriteBatch batch) {
+    	if (disposed) return;
+    	
         int screenWidth = Gdx.graphics.getWidth();
         int screenHeight = Gdx.graphics.getHeight();
         
@@ -106,7 +110,8 @@ public class Renderer {
     }
 
     public void dispose() {
-        batch.dispose();
+    	disposed = true;
+    	
         wallTexture.dispose();
         wallPixmap.dispose();
     }

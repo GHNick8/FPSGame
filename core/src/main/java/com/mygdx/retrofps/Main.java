@@ -17,6 +17,8 @@ public class Main extends ApplicationAdapter {
     WeaponManager weapon;
     EnemyManager enemies;
 
+    private boolean running = true;
+    
     @Override
     public void create() {
     	batch = new SpriteBatch();
@@ -24,11 +26,13 @@ public class Main extends ApplicationAdapter {
         player = new Player(map);
         renderer = new Renderer(map, player, batch);
         enemies = new EnemyManager(player, batch);
-        weapon = new WeaponManager();
+        weapon = new WeaponManager(player);
     }
 
     @Override
     public void render() {
+    	if (!running) return;
+    	
         float delta = Gdx.graphics.getDeltaTime();
         
         player.update(delta);
@@ -47,13 +51,20 @@ public class Main extends ApplicationAdapter {
 	     }
 	     
 	     weapon.update(delta);
+	     
+	     if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
+	    	    weapon.reload();
+	    	}
     }
 
     @Override
     public void dispose() {
-    	batch.dispose();
+    	running = false;
+    	
         renderer.dispose();
         enemies.dispose();
         weapon.dispose();
+        
+        batch.dispose();
     }
 }

@@ -5,6 +5,8 @@ public class Enemy {
     public boolean alive = true;
     public boolean justDied = false;
     public float deathSoundTimer = 0f;
+    
+    public float speed = 1.0f;
 
     public Enemy(float x, float y) {
         this.x = x;
