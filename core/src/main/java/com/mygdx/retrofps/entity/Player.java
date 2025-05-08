@@ -12,10 +12,27 @@ public class Player {
 	public float rotSpeed = 90.0f;
 	public float playerRadius = 0.2f;
 	
+	public int health = 100;
+	public boolean alive = true;
+	
 	private Map map;
 	
 	public Player(Map map) {
 		this.map = map;
+	}
+	
+	public void takeDamage(int amount) {
+		if (!alive) return;
+		
+		health -= amount;
+		
+		if (health <= 0) {
+			health = 0;
+			alive = false;
+			System.out.println("Player died!");
+		} else {
+			System.out.println("Player hit!");
+		}
 	}
 	
 	public void update(float delta) {

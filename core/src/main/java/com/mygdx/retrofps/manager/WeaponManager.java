@@ -33,9 +33,10 @@ public class WeaponManager {
 	private float reloadAnimSwitchTime = 0.3f; 
 	private boolean reloadFrame = false;
 	
+	private Player player;
+	
 	/*
 	// Hard coded pick-ups 
-	private Player player;
 	private float pickupX = 10;
 	private float pickupY = 10;
 	private boolean pickupActive = true;
@@ -44,7 +45,7 @@ public class WeaponManager {
 	private boolean disposed = false;
 	
 	public WeaponManager(Player player) {
-		// this.player = player;
+		this.player = player;
 		
 		weaponIdle = new Texture("shooterHUB03.png");
 		weaponShoot = new Texture("shooterHUB04.png");
@@ -130,6 +131,11 @@ public class WeaponManager {
             batch.setColor(Color.WHITE);
         }
         */
+        
+        // Health HUD 
+        font.setColor(Color.WHITE);
+        font.getData().setScale(2);
+        font.draw(batch, "Health: " + player.health, 20, 100);
     }
 
     public void shoot() {
